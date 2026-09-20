@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from sqlalchemy.exc import NoResultFound
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 
 from .version import VERSION
 from .routers import ROUTER_NAMES
@@ -36,6 +37,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins='*',
 )
+
+# List responses are large, highly repetitive JSON and nothing in front of the app
+# compresses them. Clients that do not send Accept-Encoding: gzip are served as before.
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 @app.get("/", include_in_schema=False)
 async def root():
