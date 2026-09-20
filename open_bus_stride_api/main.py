@@ -38,8 +38,6 @@ app.add_middleware(
     allow_origins='*',
 )
 
-# List responses are large, highly repetitive JSON and nothing in front of the app
-# compresses them. Clients that do not send Accept-Encoding: gzip are served as before.
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 @app.get("/", include_in_schema=False)
