@@ -38,10 +38,6 @@ app.add_middleware(
     allow_origins='*',
 )
 
-# List responses are large, highly repetitive JSON and nothing in front of the app
-# compresses them. Clients that do not send Accept-Encoding: gzip are served as before.
-# compresslevel is set because starlette defaults to 9, which on a 19MB response costs
-# 0.48s of CPU to save 4% over level 6.
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=6)
 
 @app.get("/", include_in_schema=False)
